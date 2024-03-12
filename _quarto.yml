@@ -6,11 +6,18 @@ project:
 
 website:
   title: "HIM in R"
+  page-navigation: true
+  back-to-top-navigation: true
   navbar:
     left:
       - href: index.qmd
         text: Home
+      - href: pfs.qmd
+        text: Physician Fee Schedule
       - about.qmd
+  sidebar:
+    style: "docked"
+    search: true
 
 format:
   html:
