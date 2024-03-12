@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "himnr",
+    "title": "",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "CodePreface\n\nThis site is under development. I hope you find something useful.\n\nThis book is about…\nR\nThis site is written in \\(R\\) using the quarto package.\n\n# pak::pak(\"andrewallenbruce/provider\")\n# pak::pak(\"andrewallenbruce/procedural\")\n# pak::pak(\"andrewallenbruce/northstar\")\nlibrary(provider)\nlibrary(procedural)\nlibrary(northstar)"
   },
   {
     "objectID": "about.html",

@@ -1,11 +1,22 @@
----
-title: "himnr"
----
+# Preface {.unnumbered}
 
-This is a Quarto website.
+> This site is under development. I hope you find something useful.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+This book is about...
+
+### R {-}
+
+This site is written in $R$ using the `quarto` package.
 
 ```{r}
-1 + 1
+#| label: library
+#| eval: false
+#| code-fold: false
+# pak::pak("andrewallenbruce/provider")
+# pak::pak("andrewallenbruce/procedural")
+# pak::pak("andrewallenbruce/northstar")
+library(provider)
+library(procedural)
+library(northstar)
 ```
+

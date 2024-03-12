@@ -1,9 +1,11 @@
 project:
   type: website
   output-dir: docs
+  render: 
+    - "*.qmd"
 
 website:
-  title: "himnr"
+  title: "HIM in R"
   navbar:
     left:
       - href: index.qmd
@@ -12,11 +14,22 @@ website:
 
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme:
+      - zephyr
+      - styles.scss
+    fontsize: 18px
+    linestretch: 1.5
+    code-link: true
+    code-fold: false
+    code-tools: true
+    code-block-bg: true
+    embed-resources: false
     toc: true
 
 editor: visual
 
 execute:
   freeze: auto
+  collapse: true
+  echo: true
+  cache: true
