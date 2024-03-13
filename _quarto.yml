@@ -16,6 +16,8 @@ website:
         text: Physician Fee Schedule
       - href: payer_list.qmd
         text: EDI Payer List
+      - href: taxonomy.qmd
+        text: Taxonomy
       - about.qmd
   sidebar:
     style: "docked"

@@ -1,0 +1,143 @@
+---
+title: "Taxonomy"
+author: "Andrew Allen Bruce"
+format:
+  html:
+    mermaid:
+      theme: default
+---
+
+```{r setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(gt)
+library(provider)
+library(reactable)
+library(reactablefmtr)
+library(htmltools)
+```
+
+# Overview
+
+The **Health Care Provider Taxonomy code set** is an external, non-medical data code set designed for use in an electronic environment, specifically within the *ASC X12N* Health Care transactions. This includes the transactions mandated under HIPAA.
+
+A taxonomy code is a unique alphanumeric code, ten characters in length. 
+
+The code set is structured into 3 distinct levels: 
+
++ Provider Grouping
++ Classification
++ Area of Specialization
+
+A taxonomy code describes a health care service provider's type, classification, and the area of specialization. The primary specialty for this provider is indicated as (Primary) below. 
+
+The taxonomy codes are selected by the provider at the time of NPI registration. Selection of a taxonomy code does not replace any credentialing or validation process that the provider requesting the code should complete.
+
+# Hierarchy
+
+```{mermaid}
+%%| label: tx-mermaid
+%%| fig-cap: "Example of Taxonomy Hierarchy"
+%%| echo: false
+flowchart LR
+  A{{Group}} -.- D(Multi-Specialty)
+  A{{Group}} -.- E(Single-Specialty)
+  B{{Individual}} --> F(Allopathic)
+  B{{Individual}} -.- G(Behavioral)
+  C{{Non-Individual}} -.- H(Hospitals)
+  C{{Non-Individual}} -.- I(Laboratories)
+  F(Allopathic) --> J([Anesthesiology])
+  J([Anesthesiology]) --o K[[207L00000X]]
+  J([Anesthesiology]) --> L>Addiction Medicine]
+  L>Addiction Medicine] --o M[[207LA0401X]]
+```
+
+::: {.callout-note}
+## Level I: Provider Grouping
+
+A major grouping of service(s) or occupation(s) of health care providers. 
+
+Examples: Allopathic & Osteopathic Physicians, Dental Providers, Hospitals, etc.
+:::
+
+::: {.callout-note}
+## Level II: Classification
+
+A more specific service or occupation related to the Provider Grouping. For example, the Classification for Allopathic & Osteopathic Physicians is based upon the General Specialty Certificates as issued by the appropriate national boards. 
+
+The following boards will however, have their general certificates appear as Level III areas of specialization strictly due to display limitations of the code set for Boards that have multiple general certificates: Medical Genetics, Preventive Medicine, Psychiatry & Neurology, Radiology, Surgery, Otolaryngology, Pathology.
+:::
+
+::: {.callout-note}
+## Level III: Area of Specialization
+
+A more specialized area of the Classification in which a provider chooses to practice or make services available. 
+
+For example, the Area of Specialization for provider grouping Allopathic & Osteopathic Physicians is based upon the Subspecialty Certificates as issued by the appropriate national boards.
+:::
+
+<br>
+
+```{r}
+#| echo: false
+#| label: tx-table
+#| fig-cap: "Table of Taxonomy Codes"
+taxonomy_codes(shape = "wide") |> 
+  select(grouping = taxonomy_grouping,
+         classification = taxonomy_classification,
+         specialization = taxonomy_specialization,
+         code = taxonomy_code,
+         # display = taxonomy_display_name,
+         definition = taxonomy_definition) |> 
+  # gt::gt(rowname_col = "classification", groupname_col = "grouping")
+  gt::gt_preview()
+```
+
+
+```{r}
+taxonomy_codes(shape = "long")
+```
+
+```{r}
+#| message: false
+#| warning: false
+#| code-fold: true
+library(provider)
+library(reactable)
+library(htmltools)
+
+taxonomy <- taxonomy_codes(shape = "wide") |> 
+  select(grouping = taxonomy_grouping,
+         classification = taxonomy_classification,
+         specialization = taxonomy_specialization,
+         code = taxonomy_code)
+
+htmltools::browsable(
+  tagList(
+    tags$button(
+      "Expand/collapse all", 
+      onclick = "Reactable.toggleAllRowsExpanded('taxonomy-table')"
+      ),
+    tags$br(reactable(
+      taxonomy,
+      groupBy = c("grouping", 
+                  "classification", 
+                  "specialization"),
+      elementId = "taxonomy-table",
+      columns = list(
+        specialization = colDef(
+          na = "No Specialization",
+          )
+        ),
+      compact = TRUE,
+      highlight = TRUE,
+      bordered = TRUE
+      ))
+    )
+  )
+```
+
+<br>
