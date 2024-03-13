@@ -12,9 +12,9 @@ library(northstar)
 library(tidyverse)
 library(gt)
 
-rvu     <- rvu()
-pfs_pay <- pfs()
-gpci    <- gpci()
+rvu  <- rvu()
+pfs  <- pfs()
+gpci <- gpci()
 
 # https://www.novitas-solutions.com/webcenter/portal/MedicareJH/FeeLookup
 ```
@@ -61,7 +61,14 @@ $$ z = 0.95(1.15x) $$
 
 As there is a corresponding GPCI value for each of the three components of an RVU, the formula is essentially the [dot product](https://www.toppr.com/guides/maths-formulas/dot-product-formula/) of the RVU and GPCI vectors, multiplied by the conversion factor:
 
-$$ a \bullet b = a_1b_1 + a_2b_2 + a_3b_3$$
+$$ a \cdot b = a_1b_1 + a_2b_2 + a_3b_3$$
+
+$$
+  f(y;a,b) = \begin{cases}
+    \frac{1}{b-a} & \text{if } a \leq y \leq b, \\
+    0 & \text{otherwise}.
+  \end{cases}
+$$
 
 
 ```{r}
@@ -85,7 +92,6 @@ cf    = 32.744 # Conversion Factor
 
 ```{r}
 # using base r's matrix multiplication infix operator
-
 c(wrvu, prvu, mrvu) %*% c(wgpci, pgpci, mgpci) * cf
 ```
 
@@ -95,7 +101,6 @@ c(wrvu, prvu, mrvu) %*% c(wgpci, pgpci, mgpci) * cf
 #| warning: false
 
 library(pracma)
-
 dot(c(wrvu, prvu, mrvu), c(wgpci, pgpci, mgpci)) * cf
 ```
 
@@ -112,6 +117,7 @@ calculate_amounts(
   mgpci = 1.125
 )
 ```
+
 <br>
 
 ::: callout-tip
@@ -175,8 +181,7 @@ Therefore, to calculate the Medicare limiting charge for a physician service for
 ```{r}
 limiting_charge <- function(x) {
   stopifnot("x must be numeric" = is.numeric(x))
-  x * 1.0925     # PAR FEE
-  # x * 1.150115 # NON-PAR FEE
+  x * 1.0925
 }
 
 limiting_charge(26.35)
@@ -212,7 +217,7 @@ rvu |>
   gt(rowname_col = "mod") |> 
   cols_label(n = "# of Codes") |> 
   cols_align(align = "left") |> 
-  opt_table_font(font = google_font(name = "Rubik")) |>
+  opt_table_font(font = google_font(name = "Hack")) |>
   opt_all_caps() |>
   opt_stylize() |> 
   tab_header(title = "For diagnostic tests, a blank in this field denotes the Global Service & the following modifiers identify the components:") |> 

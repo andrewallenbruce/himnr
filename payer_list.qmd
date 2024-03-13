@@ -82,7 +82,8 @@ tbl_bottom <- "Table: <a href='https://twitter.com/aabrucehimni'>@aabrucehimni</
 
 ```{r}
 #| label: reactable
-reactable(payers,
+#| code-fold: true
+reactable(slice(payers, 1:100),
           filterable          = TRUE,
           striped             = FALSE,
           highlight           = TRUE,
@@ -132,4 +133,24 @@ reactable(payers,
 ```
 
 
+# EDI
 
+Electronic Data Interchange (EDI) is a technology that allows the exchange of commercial information between organizations in a structured digital form based on regulated message formats and standards. Any standard business document exchanged between companies can be transferred using the EDI standard.
+
+# ANSI X12, HIPAA & HL7
+
+These are all different standards to exchange electronic business documents. Some of these standards have been developed for use in a specific industry, according to its special needs. Other standards are developed and widely used, based on geography. For example, the EDI ANSI X12 standard is developed by the [American National Standards Institute (ANSI)](https://www.ansi.org/). [HIPAA](https://www.healthit.gov/topic/privacy-security-and-hipaa/hipaa-basics) is designed specifically to comply with healthcare law. Health Level 7 (HL7) is the standard to exchange medical information.
+
+# Payer ID
+
+The Payer ID or EDI is a unique ID assigned to each insurance company. It allows provider and payer systems to talk to one another to verify eligibility, benefits and submit claims. The payer ID is generally five (5) characters but it may be longer. It may also be alpha, numeric or a combination. The payer ID is often located on the back of the insurance card in the Provider or Claims Submission section. Below are some common examples. If you are unable to locate the payer ID, please enter NA or None.
+
+## Remove Unneeded Columns
+
+We can remove three columns, for the following reasons:
+
++ `format`: V5010 and V4010 refer to the electronic claim format standard developed by ANSI. Since all HIPAA-covered entities migrated to V5010 by January 1, 2012, this information no longer applies.
+
++ `icd_vers`: indicates the version of the International Classification of Diseases, Clinical Modification that the payer uses. Since all payers now use the Tenth Revision, this information is no longer valid.
+
++ `transition_date`: refers to the date that the payer transitioned from ICD-9-CM to ICD-10-CM, which is again no longer applicable.
