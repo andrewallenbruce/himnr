@@ -14,6 +14,8 @@ website:
         text: Home
       - href: pfs.qmd
         text: Physician Fee Schedule
+      - href: payer_list.qmd
+        text: EDI Payer List
       - about.qmd
   sidebar:
     style: "docked"

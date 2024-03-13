@@ -1,0 +1,135 @@
+---
+title: "EDI Payer List"
+author: "Andrew Allen Bruce"
+---
+
+```{r setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(reactable)
+library(reactablefmtr)
+library(htmltools)
+
+payers <- "C:\\Users\\Andrew\\Downloads\\Professional (HCFA)_PayerList.xlsx" |> 
+  read_excel() |> 
+  clean_names() |> 
+  setNames(object = _, 
+           nm = c("name", 
+                  "id", 
+                  "transaction", 
+                  "enrollment", 
+                  "format", 
+                  "icd", 
+                  "icd_transition")) |> 
+  select(-c(format, icd, icd_transition)) |> 
+  mutate(
+    payer = ifelse(str_detect(name, "\\r\\nServicing States"), 
+                   str_match(name, "(.*)\\r\\nServicing States")[, 2], name),
+    state = str_match(name, "Servicing States:\\s?(.*)")[, 2]) |> 
+  separate_rows(transaction, enrollment, sep = " \r\n ") |> 
+  distinct() |> 
+  mutate(transaction = str_remove_all(transaction, "\\r\\n"),
+         transaction = str_trim(transaction),
+         enrollment = str_remove_all(enrollment, "\\r\\n"),
+         enrollment = str_trim(enrollment),
+         # enrollment = if_else(enrollment == "Yes", TRUE, FALSE),
+         transaction = case_match(transaction,
+        "AuthorizationAndReferrals" ~ "Authorization and Referrals",
+        "ClaimAttachments" ~ "Claim Attachments",
+        "ClaimStatus" ~ "Claim Status",
+        "Dental Claims" ~ "Dental Claims",
+        "ElectronicCob" ~ "Electronic COB",
+        "ElectronicRemits" ~ "Electronic Remits",
+        "Eligibility" ~ "Eligibility",
+        "InstitutionalClaims" ~ "Institutional Claims",
+        "InsuranceEligibilityDiscovery" ~ "Insurance Eligibility Discovery",
+        "ProfessionalClaims" ~ "Professional Claims",
+        "Remits" ~ "Remits",
+        "Rtpa" ~ "RTPA")) |>
+  select(payer,
+         id, 
+         transaction,
+         enrollment,
+         state) |>
+  mutate(
+    tran_colors = case_match(
+      transaction,
+      "Professional Claims" ~ "#FFACAC",
+      "RTPA" ~ "#A45746",
+      "Claim Attachments" ~ "#132F3C",
+      "Electronic Remits" ~ "#140E0F",
+      "Remits" ~ "#74AAEB",
+      "Insurance Eligibility Discovery" ~ "#1D4C62",
+      "Claim Status" ~ "#95A494",
+      "Electronic COB" ~ "#DBB592",
+      "Eligibility" ~ "#F6CCB0",
+      "Institutional Claims" ~ "#EBA42B",
+      "Authorization & Referrals" ~ "#E85569",
+      "Dental Claims" ~ "#5C2C2D"),
+    enr_colors = case_match(
+      enrollment,
+      "NO" ~ "#f0fff0",
+      "Yes" ~ "#C7662A"))
+
+tbl_bottom <- "Table: <a href='https://twitter.com/aabrucehimni'>@aabrucehimni</a> | Data: <a href='https://payers.gatewayedi.com/payerlist/default.aspx'>Trizetto Gateway EDI</a> & <a href='http://www.healthdataservices.com/payerid/payerlist.htm'>Health Data Services, Inc.</a>"
+```
+
+
+```{r}
+#| label: reactable
+reactable(payers,
+          filterable          = TRUE,
+          striped             = FALSE,
+          highlight           = TRUE,
+          showPageSizeOptions = TRUE,
+          class               = "packages-table",
+          onClick             = "expand",
+          rowStyle            = list(cursor = "pointer"),
+          paginationType      = "simple",
+          groupBy             = "payer",
+          defaultSorted       = "payer",
+          defaultColDef       = colDef(
+            headerClass       = "col-header",
+            footerClass       = "col-footer"),
+          columns = list(
+            payer = colDef(name = "Payer"),
+            state = colDef(name = "States",
+                           width = 100,
+                           aggregate = "unique"),
+            id = colDef(name = "Payer ID",
+                        class = "number",
+                        width = 100,
+                        aggregate = "unique"),
+            transaction = colDef(name = "Available Transactions",
+                                 aggregate = "unique",
+                                 cell = pill_buttons(
+                                   data = payers,
+                                   color_ref = "tran_colors",
+                                   box_shadow = FALSE)),
+            enrollment = colDef(name = "Enrollment Required",
+                                width = 200,
+                                aggregate = "frequency",
+                                cell = pill_buttons(
+                                  data = payers,
+                                  color_ref = "enr_colors",
+                                  box_shadow = FALSE)),
+                         tran_colors = colDef(show = FALSE),
+                         enr_colors = colDef(show = FALSE))) |>
+  add_title(title = "Insurance Payer Information",
+            margin = reactablefmtr::margin(t = 10, r = 0, b = 15, l = 0)) |>
+  add_subtitle(subtitle = "For Electronic Data Interchange (EDI): Treatment, Payment, Operations (TPO)",
+               margin = reactablefmtr::margin(t = 10, r = 0, b = 15, l = 0)) |>
+  add_source(font_color = "#C8C8C8",
+             align = "right",
+             margin = reactablefmtr::margin(t = 0, r = 10, b = 0, l = 0),
+             source = html(tbl_bottom)
+  )
+```
+
+
+
