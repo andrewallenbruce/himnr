@@ -2,8 +2,6 @@
 
 > This site is under development. I hope you find something useful.
 
-This book is about...
-
 ### R {-}
 
 This site is written in $R$ using the `quarto` package.
