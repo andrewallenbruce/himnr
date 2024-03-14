@@ -1,20 +1,12 @@
+---
+title: "Health Information Management in R"
+---
+
 # Preface {.unnumbered}
 
 > This site is under development. I hope you find something useful.
 
 ### R {-}
 
-This site is written in $R$ using the `quarto` package.
-
-```{r}
-#| label: library
-#| eval: false
-#| code-fold: false
-# pak::pak("andrewallenbruce/provider")
-# pak::pak("andrewallenbruce/procedural")
-# pak::pak("andrewallenbruce/northstar")
-library(provider)
-library(procedural)
-library(northstar)
-```
+This site is written in $r$ using the `{quarto}` package.
 

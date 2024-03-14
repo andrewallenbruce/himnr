@@ -1,8 +1,8 @@
 {
-  "hash": "ffa2e04335dc5f8b306f2c67a1305b46",
+  "hash": "d5b1ab6cc1ecc8dcc8542071c73d7055",
   "result": {
     "engine": "knitr",
-    "markdown": "# Preface {.unnumbered}\n\n> This site is under development. I hope you find something useful.\n\n### R {-}\n\nThis site is written in $R$ using the `quarto` package.\n\n\n::: {.cell}\n\n```{.r .cell-code  code-fold=\"false\"}\n# pak::pak(\"andrewallenbruce/provider\")\n# pak::pak(\"andrewallenbruce/procedural\")\n# pak::pak(\"andrewallenbruce/northstar\")\nlibrary(provider)\nlibrary(procedural)\nlibrary(northstar)\n```\n:::\n",
+    "markdown": "---\ntitle: \"Health Information Management in R\"\n---\n\n\n# Preface {.unnumbered}\n\n> This site is under development. I hope you find something useful.\n\n### R {-}\n\nThis site is written in $r$ using the `{quarto}` package.\n\n\n::: {.cell}\n\n```{.r .cell-code  code-fold=\"false\"}\n# pak::pak(\"andrewallenbruce/provider\")\n# pak::pak(\"andrewallenbruce/procedural\")\n# pak::pak(\"andrewallenbruce/northstar\")\n```\n:::\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"

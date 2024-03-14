@@ -4,16 +4,14 @@ author: "Andrew Allen Bruce"
 ---
 
 ```{r setup}
-#| echo: false
 #| message: false
 #| warning: false
-
-library(northstar)
-library(tidyverse)
-library(gt)
+#| include: false
+#| cache: false
+source("setup-doc.R")
 
 rvu  <- rvu()
-pfs  <- pfs()
+pfs_pay  <- pfs()
 gpci <- gpci()
 
 # https://www.novitas-solutions.com/webcenter/portal/MedicareJH/FeeLookup
@@ -42,7 +40,6 @@ The Medicare physician fee schedule amounts are adjusted to reflect the variatio
 The formulas for 2024 Physician Fee Schedule payment amounts are as follows:
 
 ::: panel-tabset
-
 ## Participating
 
 $$ x = [(RVU_w \times GPCI_w) + (RVU_p \times GPCI_p) + (RVU_m \times GPCI_m)] \times CF $$
@@ -51,13 +48,10 @@ $$ x = [(RVU_w \times GPCI_w) + (RVU_p \times GPCI_p) + (RVU_m \times GPCI_m)] \
 
 $$ y = 0.95x $$
 
-
 ## Limiting Charge
 
 $$ z = 0.95(1.15x) $$
-
 :::
-
 
 As there is a corresponding GPCI value for each of the three components of an RVU, the formula is essentially the [dot product](https://www.toppr.com/guides/maths-formulas/dot-product-formula/) of the RVU and GPCI vectors, multiplied by the conversion factor:
 
@@ -69,7 +63,6 @@ $$
     0 & \text{otherwise}.
   \end{cases}
 $$
-
 
 ```{r}
 wrvu  = 6.26   # Work RVU
@@ -84,17 +77,14 @@ mgpci = 1.125  # Malpractice GPCI
 cf    = 32.744 # Conversion Factor
 ```
 
-
 ```{r}
 ((wrvu * wgpci) + (prvu * pgpci) + (mrvu * mgpci)) * cf
 ```
-
 
 ```{r}
 # using base r's matrix multiplication infix operator
 c(wrvu, prvu, mrvu) %*% c(wgpci, pgpci, mgpci) * cf
 ```
-
 
 ```{r}
 #| message: false
@@ -103,7 +93,6 @@ c(wrvu, prvu, mrvu) %*% c(wgpci, pgpci, mgpci) * cf
 library(pracma)
 dot(c(wrvu, prvu, mrvu), c(wgpci, pgpci, mgpci)) * cf
 ```
-
 
 ```{r}
 calculate_amounts(
@@ -238,7 +227,6 @@ rvu |>
     row_group.as_column = TRUE
     )
 ```
-
 
 ## Status Codes
 
