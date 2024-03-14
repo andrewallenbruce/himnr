@@ -6,8 +6,9 @@ author: "Andrew Allen Bruce"
 ```{r setup}
 #| message: false
 #| warning: false
-#| include: false
+#| echo: false
 #| cache: false
+
 source("setup-doc.R")
 
 rvu  <- rvu()
@@ -19,9 +20,15 @@ gpci <- gpci()
 
 # Overview
 
-This file contains information on services covered by the Medicare Physician Fee Schedule (MPFS) in 2024. For more than 10,000 physician services, the file contains the associated relative value units (RVUs), a fee schedule status indicator, and various payment policy indicators needed for payment adjustment (i.e., payment of assistant at surgery, team surgery, bilateral surgery, etc.).
+This file contains information on services covered by the {{< acr MPFS >}} in 2024. For more than 10,000 physician services, the file contains the associated {{< acr RVU >}}s, a fee schedule status indicator, and various payment policy indicators needed for payment adjustment (i.e., payment of assistant at surgery, team surgery, bilateral surgery, etc.).
 
-The Medicare physician fee schedule amounts are adjusted to reflect the variation in practice costs from area to area. A geographic practice cost index (GPCI) has been established for every Medicare payment locality for each of the three components of a procedure’s relative value unit (i.e., the RVUs for work, practice expense, and malpractice). The GPCIs are applied in the calculation of a fee schedule payment amount by multiplying the RVU for each component times the GPCI for that component.
+The {{< acr MPFS >}} amounts are adjusted to reflect the variation in practice costs from area to area. A {{< acr GPCI >}} has been established for every Medicare payment locality for each of the three components of a procedure’s {{< acr RVU >}}: 
+
+  1. Physician Work
+  1. Practice Expense
+  1. Malpractice Expense (sometimes called Professional Liability Insurance)
+
+The {{< acr GPCI >}}s are applied in the calculation of a fee schedule payment amount by multiplying the {{< acr RVU >}} for each component times the {{< acr GPCI >}} for that component.
 
 ## Payment Formulas
 
@@ -37,7 +44,7 @@ The Medicare physician fee schedule amounts are adjusted to reflect the variatio
 
 <br>
 
-The formulas for 2024 Physician Fee Schedule payment amounts are as follows:
+The formulas for the 2024 {{< acr MPFS >}} payment amounts are as follows:
 
 ::: panel-tabset
 ## Participating

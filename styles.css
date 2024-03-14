@@ -16,4 +16,4 @@ $code-color: #4758AB;
 
 // Add a bit more vertical space between lines of text.
 // quarto uses 1.5 but that seems a bit cramped in places.
-$line-height-base: 1.75;
+$line-height-base: 2;

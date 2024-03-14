@@ -3,6 +3,19 @@ project:
   output-dir: docs
   render: 
     - "*.qmd"
+filters:
+  - acronyms
+acronyms:
+  loa_title: "Glossary"
+  loa_header_classes: []
+  include_unused: false
+  insert_loa: "end"
+  insert_links: true
+  id_prefix: "acronyms_"
+  sorting: "alphabetical"
+  non_existing: "key"
+  style: "short-footnote"
+  fromfile: acronyms.yml
 
 website:
   title: "HIM in R"
@@ -29,8 +42,8 @@ format:
       - zephyr
       - styles.scss
     date: last-modified
-    fontsize: 18px
-    linestretch: 1.5
+    fontsize: 16px
+    linestretch: 1.75
     code-link: true
     code-fold: false
     code-tools: true
@@ -57,4 +70,6 @@ fig-height: 5
 fig-align: center
 output-width: 100%
 highlight-style: tango
+site-url: https://andrewallenbruce.github.io/himnr/
+repo-url: https://github.com/andrewallenbruce/himnr
   

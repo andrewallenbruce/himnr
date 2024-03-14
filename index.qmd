@@ -1,12 +1,11 @@
 ---
-title: "Health Information Management in R"
+title: "Welcome"
+subtitle: "A guide to Health Information Management in R"
 ---
 
-# Preface {.unnumbered}
+::: callout-warning
+### Site Under Development
 
-> This site is under development. I hope you find something useful.
-
-### R {-}
-
-This site is written in $r$ using the `{quarto}` package.
+This site is under development. I hope you find something useful.
+:::
 

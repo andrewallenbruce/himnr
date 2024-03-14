@@ -1,0 +1,12 @@
+---
+acronyms:
+  keys:
+    - shortname: HIPAA
+      longname: the Health Insurance Portability and Accountability Act of 1996
+    - shortname: RVU
+      longname: Relative Value Unit
+    - shortname: MPFS
+      longname: Medicare Physician Fee Schedule
+    - shortname: GPCI
+      longname: Geographic Practice Cost Index
+---
