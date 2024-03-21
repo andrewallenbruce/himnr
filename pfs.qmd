@@ -11,24 +11,24 @@ author: "Andrew Allen Bruce"
 
 source("setup-doc.R")
 
-rvu  <- rvu()
+rvu      <- rvu()
 pfs_pay  <- pfs()
-gpci <- gpci()
+gpci     <- gpci()
 
 # https://www.novitas-solutions.com/webcenter/portal/MedicareJH/FeeLookup
 ```
 
 # Overview
 
-This file contains information on services covered by the {{< acr MPFS >}} in 2024. For more than 10,000 physician services, the file contains the associated {{< acr RVU >}}s, a fee schedule status indicator, and various payment policy indicators needed for payment adjustment (i.e., payment of assistant at surgery, team surgery, bilateral surgery, etc.).
+This file contains information on services covered by the MPFS in 2024. For more than 10,000 physician services, the file contains the associated RVUs, a fee schedule status indicator, and various payment policy indicators needed for payment adjustment (i.e., payment of assistant at surgery, team surgery, bilateral surgery, etc.).
 
-The {{< acr MPFS >}} amounts are adjusted to reflect the variation in practice costs from area to area. A {{< acr GPCI >}} has been established for every Medicare payment locality for each of the three components of a procedure’s {{< acr RVU >}}: 
+The MPFS amounts are adjusted to reflect the variation in practice costs from area to area. A GPCI has been established for every Medicare payment locality for each of the three components of a procedure’s RVU: 
 
   1. Physician Work
   1. Practice Expense
   1. Malpractice Expense (sometimes called Professional Liability Insurance)
 
-The {{< acr GPCI >}}s are applied in the calculation of a fee schedule payment amount by multiplying the {{< acr RVU >}} for each component times the {{< acr GPCI >}} for that component.
+The GPCIs are applied in the calculation of a fee schedule payment amount by multiplying the RVU for each component times the GPCI for that component.
 
 ## Payment Formulas
 
@@ -44,32 +44,32 @@ The {{< acr GPCI >}}s are applied in the calculation of a fee schedule payment a
 
 <br>
 
-The formulas for the 2024 {{< acr MPFS >}} payment amounts are as follows:
+The formulas for the 2024 MPFS payment amounts are as follows:
 
-::: panel-tabset
-## Participating
+### Participating
 
 $$ x = [(RVU_w \times GPCI_w) + (RVU_p \times GPCI_p) + (RVU_m \times GPCI_m)] \times CF $$
 
-## Non-Participating
+### Non-Participating
 
 $$ y = 0.95x $$
 
-## Limiting Charge
+### Limiting Charge
 
 $$ z = 0.95(1.15x) $$
-:::
+
+::: callout
+
+## Many Ways to Say the Same Thing
 
 As there is a corresponding GPCI value for each of the three components of an RVU, the formula is essentially the [dot product](https://www.toppr.com/guides/maths-formulas/dot-product-formula/) of the RVU and GPCI vectors, multiplied by the conversion factor:
 
-$$ a \cdot b = a_1b_1 + a_2b_2 + a_3b_3$$
+<br>
 
-$$
-  f(y;a,b) = \begin{cases}
-    \frac{1}{b-a} & \text{if } a \leq y \leq b, \\
-    0 & \text{otherwise}.
-  \end{cases}
-$$
+$$ a \cdot b = a_1b_1 + a_2b_2 + a_3b_3$$
+<br>
+
+Setting up the variables:
 
 ```{r}
 wrvu  = 6.26   # Work RVU
@@ -84,22 +84,39 @@ mgpci = 1.125  # Malpractice GPCI
 cf    = 32.744 # Conversion Factor
 ```
 
-```{r}
-((wrvu * wgpci) + (prvu * pgpci) + (mrvu * mgpci)) * cf
-```
+<br>
+
+Basic Calculation:
 
 ```{r}
-# using base r's matrix multiplication infix operator
-c(wrvu, prvu, mrvu) %*% c(wgpci, pgpci, mgpci) * cf
+((wrvu * wgpci) + 
+   (prvu * pgpci) + 
+   (mrvu * mgpci)) * cf
 ```
+<br>
+
+With base R's Matrix Multiplication Infix Operator:
+
+```{r}
+as.vector(
+  c(wrvu, prvu, mrvu) %*% 
+  c(wgpci, pgpci, mgpci) * cf)
+```
+<br>
+
+With the `pracma` package's `dot()` function:
 
 ```{r}
 #| message: false
 #| warning: false
 
-library(pracma)
-dot(c(wrvu, prvu, mrvu), c(wgpci, pgpci, mgpci)) * cf
+pracma::dot(
+  c(wrvu, prvu, mrvu), 
+  c(wgpci, pgpci, mgpci)) * cf
 ```
+<br>
+
+With the `northstar` package's `calculate_amounts()` function:
 
 ```{r}
 calculate_amounts(
@@ -114,30 +131,29 @@ calculate_amounts(
 )
 ```
 
-<br>
+::: 
 
-::: callout-tip
+
+::: callout
 ### Non-Facility vs. Facility
 
-Under the Medicare Physician Fee schedule (MPFS), some procedures have separate rates for physicians’ services when provided in facility and non-facility settings.
+Under the MPFS, many procedures have separate payment amounts for physician services when provided in facility and non-facility settings.
 
-The rate, facility or non-facility, which a physician service is paid under the MPFS is determined by the Place of Service (POS) code that is used to identify the setting where the patient received the face-to-face encounter with the physician, non-physician practitioner (NPP) or other supplier.
-
-In general, the POS code reflects the actual place where the patient receives the face-to-face service and determines whether the facility or non-facility payment rate is paid.
+The amount is determined by the **Place of Service (POS)** code. In general, the POS code reflects the *actual place* where the patient receives the face-to-face service and determines whether the facility or non-facility payment rate is paid.
 
 Services rendered to a patient who is an inpatient of a hospital (POS code 21) or an outpatient of a hospital (POS codes 19 or 22), the facility rate is paid, regardless of where the face-to-face encounter with the patient occurred.
 :::
 
 <br>
 
-::: callout-note
-### Therapy Code Caps
+::: callout-warning
+### Therapy Code Capitation
 
-Certain therapy codes will receive a 50% reduction to the PE.
+Certain therapy codes will receive a 50% reduction to the Practice Expense.
 
 Section 5102(b) of the Deficit Reduction Act of 2005 requires a payment cap on the *Technical Component (TC)* of certain diagnostic imaging procedures and the TC portions of the global diagnostic imaging services.
 
-This cap is based on the *Outpatient Prospective Payment System (OPPS)* payment. To implement this provision, the physician fee schedule amount is compared to the OPPS payment amount and **the lower amount is used in the formula above to calculate payment.**
+This cap is based on the *Outpatient Prospective Payment System (OPPS)* payment. To implement this provision, the Physician Fee Schedule amount is compared to the OPPS payment amount and **the lower amount is used in the formula to calculate payment.**
 :::
 
 # Accepting Assignment
@@ -156,7 +172,7 @@ This limit cap is known as the limiting charge. Providers that do not fully part
 
 The Medicare limiting charge is the maximum amount a Non-Participating Provider can charge for services submitted on a non-assigned claim. This is that maximum amount a beneficiary could legally be charged.
 
-### Limiting Charge Calculation
+### Calculation
 
 The Medicare limiting charge is, by law, set at $115\%$ of the payment amount for the service furnished by the Non-Participating Physician.
 
@@ -170,20 +186,19 @@ Calculating $95\%$ of $115\%$ of an amount, $x$, is equivalent to $x \times 1.09
 
 # 109.25% of 10
 10 * 1.0925 
+
+# using the northstar package
+limiting_charge(10)
 ```
 
-Therefore, to calculate the Medicare limiting charge for a physician service for a locality, multiply the fee schedule amount (participating fee) by a factor of 1.0925. The result is the Medicare limiting charge for that service for that locality to which the fee schedule amount applies.
+{{< pagebreak >}}
 
-```{r}
-limiting_charge <- function(x) {
-  stopifnot("x must be numeric" = is.numeric(x))
-  x * 1.0925
-}
+# Relative Value File
 
-limiting_charge(26.35)
-```
+This file contains information on services covered by the Medicare Physician Fee Schedule (MPFS). For more than 10,000 physician services, the file contains the associated relative value units (RVUs), a fee schedule status indicator, and various payment policy indicators needed for payment adjustment (i.e., payment of assistant at surgery, team surgery, bilateral surgery, etc.).
 
-# RVU File
+The Medicare physician fee schedule amounts are adjusted to reflect the variation in practice costs from area to area. A geographic practice cost index (GPCI) has been established for every Medicare payment locality for each of the three components of a procedure’s relative value unit (i.e., the RVUs for work, practice expense, and malpractice). The GPCIs are applied in the calculation of a fee schedule payment amount by multiplying the RVU for each component times the GPCI for that component.
+
 
 ## Modifiers
 
@@ -623,9 +638,18 @@ rvu |>
     )
 ```
 
-# Payment File
+{{< pagebreak >}}
+
+# Payment Amount File
 
 This file contains locality-specific physician fee schedule payment amounts for services covered by the Medicare Physician Fee Schedule (MPFS) with one record for each unique combination of carrier, locality, procedure code and modifier.
+
+```{r}
+northstar:::col_lb("md", "pfs") |> 
+  gt(rowname_col = "var") |>
+  gt_style()
+```
+
 
 ```{r}
 #| echo: false

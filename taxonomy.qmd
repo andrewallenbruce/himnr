@@ -19,7 +19,7 @@ library(htmltools)
 
 # Overview
 
-The **Health Care Provider Taxonomy Code Set** is an external, non-medical data code set designed for use in an electronic environment, specifically within the *ASC X12N* Health Care transactions. This includes the transactions mandated under {{< acr HIPAA >}}.
+The **Health Care Provider Taxonomy Code Set** is an external, non-medical data code set designed for use in an electronic environment, specifically within the *ASC X12N* Health Care transactions. This includes the transactions mandated under HIPAA.
 
 A taxonomy code is a unique alphanumeric code, ten characters in length.
 
@@ -58,28 +58,27 @@ flowchart LR
 A major grouping of service(s) or occupation(s) of health care providers.
 
 **Examples:** 
-  + Allopathic & Osteopathic Physicians
-  + Dental Providers
-  + Hospitals
+-  Allopathic & Osteopathic Physicians 
+-  Dental Providers 
+-  Hospitals
 :::
 
 ::: callout
 ## Level II: Classification
 
-A more specific service or occupation related to the Provider Grouping. 
+A more specific service or occupation related to the Provider Grouping.
 
 For example, the Classification for Allopathic & Osteopathic Physicians is based upon the General Specialty Certificates as issued by the appropriate national boards.
 
-The following boards will however, have their general certificates appear as Level III Areas strictly due to display limitations of the code set for Boards that have multiple general certificates: 
+The following boards will however, have their general certificates appear as Level III Areas strictly due to display limitations of the code set for Boards that have multiple general certificates:
 
-  + Medical Genetics
-  + Preventive Medicine
-  + Psychiatry & Neurology
-  + Radiology
-  + Surgery
-  + Otolaryngology
-  + Pathology
-
+-   Medical Genetics
+-   Preventive Medicine
+-   Psychiatry & Neurology
+-   Radiology
+-   Surgery
+-   Otolaryngology
+-   Pathology
 :::
 
 ::: callout
@@ -96,6 +95,9 @@ For example, the Area of Specialization for provider grouping Allopathic & Osteo
 #| echo: false
 #| label: tx-table
 #| fig-cap: "Table of Taxonomy Codes"
+
+taxonomy("wide")
+
 taxonomy_codes(shape = "wide") |> 
   select(grouping = taxonomy_grouping,
          classification = taxonomy_classification,
@@ -128,7 +130,7 @@ htmltools::browsable(
       "Expand/collapse all", 
       onclick = "Reactable.toggleAllRowsExpanded('taxonomy-table')"
       ),
-    tags$br(reactable(
+    reactable(
       taxonomy,
       groupBy = c("grouping", 
                   "classification", 
@@ -142,7 +144,7 @@ htmltools::browsable(
       compact = TRUE,
       highlight = TRUE,
       bordered = TRUE
-      ))
+      )
     )
   )
 ```

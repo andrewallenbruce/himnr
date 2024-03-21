@@ -3,38 +3,39 @@ project:
   output-dir: docs
   render: 
     - "*.qmd"
-filters:
-  - acronyms
-acronyms:
-  loa_title: "Glossary"
-  loa_header_classes: []
-  include_unused: false
-  insert_loa: "end"
-  insert_links: true
-  id_prefix: "acronyms_"
-  sorting: "alphabetical"
-  non_existing: "key"
-  style: "short-footnote"
-  fromfile: acronyms.yml
 
 website:
   title: "HIM in R"
   page-navigation: true
   back-to-top-navigation: true
   navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - href: pfs.qmd
-        text: Physician Fee Schedule
-      - href: payer_list.qmd
-        text: EDI Payer List
-      - href: taxonomy.qmd
-        text: Taxonomy
-      - about.qmd
-  sidebar:
-    style: "docked"
+    background: primary
     search: true
+    left:
+      - text: "Home"
+        file: index.qmd
+      - text: "Physician Fee Schedule"
+        file: pfs.qmd
+      - text: "EDI Payer List"
+        file: payer_list.qmd
+      - text: "Taxonomy"
+        file: taxonomy.qmd
+  
+sidebar:
+  - title: "Physician Fee Schedule"
+    style: "docked"
+    background: light
+    contents:
+       - pfs.qmd
+       - calculation.qmd
+      
+  - title: "EDI Payer List"
+    contents:
+      - payer_list.qmd
+    
+  - title: "Taxonomy"
+    contents:
+      - taxonomy.qmd
 
 format:
   html:
@@ -57,11 +58,6 @@ execute:
   collapse: true
   echo: true
   cache: true
-
-page-footer:
-    left: "Built with [Quarto](https://quarto.org). {{< fa copyright >}} [Andrew Bruce](andrew.bruce@northstarrevenueintegrity.com)"
-    border: false
-    background: light
 
 published-title: "Last updated"
 number-depth: 2
